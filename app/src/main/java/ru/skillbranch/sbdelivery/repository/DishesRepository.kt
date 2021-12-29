@@ -61,6 +61,5 @@ class DishesRepository(
         return dishesDao.findDishesByName(searchText).map { mapper.mapPersistToEntity(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-        // return TODO("Сделать поиск через дао")
     }
 }

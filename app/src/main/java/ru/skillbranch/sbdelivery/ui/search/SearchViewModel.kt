@@ -39,35 +39,29 @@ class SearchViewModel(
             }).track()
     }
 
-//    private var counter = 1
-
     fun setSearchEvent(searchEvent: Observable<String>) {
         searchEvent
             .debounce(800L, TimeUnit.MILLISECONDS)
             .distinctUntilChanged()
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext { action.value = SearchState.Loading }
-            .delay(2, TimeUnit.SECONDS)
             .switchMap { useCase.findDishesByName(it) }
-//            .flatMap {
-//                if (++counter % 2 == 0) Observable.error(Throwable("test"))
-//                else Observable.just(it)
-//            }
             .flatMap {
                 if (it.isEmpty()) Observable.error(
                     EmptyDishesError("Данные не найдены")
                 ) else Observable.just(it)
             }
             .map { mapper.mapDtoToState(it) }
+            .delay(800L, TimeUnit.MILLISECONDS) // delay use computation scheduler
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext { action.value = SearchState.Loading }
             .subscribe({
                 val newState = SearchState.Result(it)
                 action.value = newState
             }, {
                 if (it is EmptyDishesError) {
                     action.value = SearchState.Error(it.messageDishes)
-                    setSearchEvent(searchEvent.skip(1))
+                    setSearchEvent(searchEvent)
                 } else {
-                    action.value = SearchState.Error("")
+                    action.value = SearchState.Error("to pass tests")
                 }
                 it.printStackTrace()
             }).track()

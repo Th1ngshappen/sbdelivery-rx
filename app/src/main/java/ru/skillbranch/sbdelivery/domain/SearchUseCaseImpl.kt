@@ -13,9 +13,12 @@ class SearchUseCaseImpl(private val repository: DishesRepositoryContract) : Sear
 
 
     override fun findDishesByName(searchText: String): Observable<List<DishEntity>> =
+        // поиск через DAO
         // do trimming here since the sqllite trim() function does not remove other whitespace characters by default.
         // https://www.sqlitetutorial.net/sqlite-functions/sqlite-trim/
         repository.findDishesByName(searchText.trim())
+
+//      поиск через фильтр
 //        repository.getCachedDishes()
 //            .toObservable()
 //            .map { dishes ->

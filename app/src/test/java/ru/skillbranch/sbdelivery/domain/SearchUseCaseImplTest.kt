@@ -12,6 +12,9 @@ import ru.skillbranch.sbdelivery.MockDataHolder
 import ru.skillbranch.sbdelivery.repository.DishesRepositoryContract
 import java.util.*
 
+/*
+* Сделать поиск с помощью возможностей БД
+* */
 class SearchUseCaseImplTest {
     private val repository = mock<DishesRepositoryContract>()
     private lateinit var useCase: SearchUseCase
